@@ -1,0 +1,26 @@
+Summarize Finite difference method for option pricing
+Give me the details of solving it using Implicit method
+Now follow the steps, you should first turn the BS formula into a heat equation, then apply the methods
+GPT: Turn the equation to a non-standardized form
+I want your transformation make the heat equation to the most basic form. You can modify your transformation
+Now Go deep into the discretization part, show me how to discretize the PDE you transformed
+How to set up the boundary conditions. We must limit the problem into a finite space
+Now I want to apply all the methods to American Options, what should I change?
+GPT: Give the wrong method which solve the linear system using LU
+Now you are still solving American Options problems, but you use SOR to solve the subproblem of solving the equation. The SOR should be projected SOR method, which means that at every step of SOR, you should compare the result with early exercise. The initial value of SOR can be the last time step
+You mentioned intrinsic value at that point. What is the formula for that value?
+GPT: Give a wrong function without exponential term
+Actually we have to compare the u value with early expiration premium, can you give explicitly what we have to compare with? using tau and x to represent
+Now give me the boundary conditions for American Options
+GPT: Still forgot transformation
+Recall your transformation, Is there any need to add some exponential term in the representation?
+GPT: Still forgot transformation
+So should there be exponential term in the boundary conditions? Fix your answer
+GPT: Correct answer
+Now, give me a criteria to choose the x_min and x_max, after that, tell me the details of discretization
+Give me the matrix form of the equations I have to solve for each time step
+Now give me the way to find out the solution of option value and greeks after solving the whole finite difference function
+GPT: Just describe without formulas
+Give me explicitly how to calculate V using u
+What is the advantage of using iterative method to solve the subproblem rather than solve it directly and project it?
+Since American Options do not satisfy Black Scholes formula, why we can use finite difference method?

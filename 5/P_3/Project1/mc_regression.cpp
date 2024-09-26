@@ -1,0 +1,96 @@
+#include "mc_regression.h"
+#include "regression.h"
+#include <limits>
+#include <iostream>
+
+namespace montecarlo {
+	
+    namespace regression {
+
+        using namespace linalg::regression;
+
+        MCRegression::MCRegression(const uint times):
+            _times(times),
+            _coeff(std::numeric_limits<double>::quiet_NaN()) {}
+
+        MCRegression::~MCRegression() {}
+
+        double MCRegression::fit_predict_at_0(const arr& y) {
+            return _coeff = y.mean();
+        }
+
+        double MCRegression::predict_at_0() const {
+            return _coeff;
+        }
+
+        PolynomialMCRegression::PolynomialMCRegression(const uint times, const uint degree, const bool precondition):
+            MCRegression(times),
+            degree(degree),
+            precondition(precondition) {
+            _coeffs.resize(times);
+        }
+
+        arr PolynomialMCRegression::fit_predict(const uint time, const arr& x, const arr& y) {
+            if (time == 0) {
+                throw std::out_of_range ("At time 0, fit_predict_at_0 should be used.");
+            }
+            arr result;
+            std::tie(_coeffs.at(time), result) = fit_linear_regression(vandermonde(x, degree), y, precondition);
+            return result;
+        }
+
+
+        arr PolynomialMCRegression::predict(const uint time, const arr& x) const {
+            if (time == 0) {
+                throw std::out_of_range ("At time 0, predict_at_0 should be used.");
+            }
+            return evaluate_polynomial(_coeffs.at(time), x);
+        }
+
+        HermiteMCRegression::HermiteMCRegression(const uint times, const uint degree, const bool precondition,
+            const bool standardize) :
+            MCRegression(times),
+            degree(degree),
+            precondition(precondition),
+            standardize(standardize)
+        {
+            _coeffs.resize(times);
+            //std::cout << "Hermite" << std::endl;
+        }
+            /* Implement a constructor similar to that of PolynomialMCRegression */
+
+        arr HermiteMCRegression::fit_predict(const uint time, const arr &x, const arr &y) {
+			/* Implement a Hermite version of PolynomialMCRegression::fit_predict */
+            if (time == 0) {
+                throw std::out_of_range ("At time 0, fit_predict_at_0 should be used.");
+            }
+            arr result;
+            if (standardize == 1)
+            {
+                std::tie(_coeffs.at(time), result) = fit_linear_regression(std::get<0>(hermite_vandermonde_standardized(x, degree)), y, precondition);
+            }
+            else
+            {
+                std::tie(_coeffs.at(time), result) = fit_linear_regression(hermite_vandermonde(x, degree), y, precondition);
+            }
+            return result;
+        }
+
+        arr HermiteMCRegression::predict(const uint time, const arr& x) const {
+            /* Implement a Hermite version of PolynomialMCRegression::predict */
+            if (time == 0) {
+                throw std::out_of_range ("At time 0, fit_predict_at_0 should be used.");
+            }
+            if (standardize==0)
+                return evaluate_hermite_polynomial(_coeffs.at(time), x);
+            else
+            {
+                double mean = x.mean();
+                double std_dev = std::sqrt((x - mean).square().sum() / x.size());
+                return evaluate_hermite_polynomial_standardized(_coeffs.at(time), x,mean,std_dev);
+            }
+                
+        }
+    }
+}
+

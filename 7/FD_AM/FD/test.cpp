@@ -1,0 +1,47 @@
+#include "EuropeanOption.hpp"
+#include "FiniteDifference.hpp"
+#include <iostream>
+#include <iomanip>
+
+int main()
+{
+	std::cout << std::fixed << std::setprecision(6);
+	double sigma = 0.32;
+	double S = 42;
+	double q = 0.02;
+	double T = 0.75;
+	double K = 40;
+	double r = 0.04;
+	int M = 4;
+	double alpha = 0.45;
+	
+	EuropeanOption bs(0, S, K, T, sigma, r, q);
+	double accu_value = 3.3045362802172642;
+	std::cout << bs.DeltaPut()<<','<< bs.GammaPut() <<','<< bs.ThetaPut() << std::endl;
+	
+	for (int i = 1; i <= 6; i++)
+	{
+		FiniteDifference fd(S, K, T, sigma, r, q, M, alpha,0);
+		FiniteDifference fd_euro(S, K, T, sigma, r, q, M, alpha, 1);
+		fd_euro.Forward_Euler();
+		fd.Forward_Euler();
+		double fd_put_value = fd.Value1();
+		double fd_put_value_2 = fd.Value2();
+		double error_pointwise = abs(fd_put_value - accu_value);
+		double error_pointwise_2 = abs(fd_put_value_2 - accu_value);
+		double err_RMS = fd.RMS_error();
+		double delta = fd.Delta();
+		double gamma = fd.Gamma();
+		double theta = fd.Theta();
+		double eu_bs = bs.Put();
+		double eu_app = fd_euro.Value1();
+		double var_red = fd_put_value + eu_bs - eu_app;
+		if (M == 4)
+		{
+			fd.print_intermediate_result();
+		}
+		std::cout << M << ',' << error_pointwise << ',' << error_pointwise_2 <<','<<err_RMS<<','<<delta << ',' << gamma << ',' << theta <<','<<var_red << abs(var_red-accu_value)<<std::endl;
+		M *= 4;
+	}
+
+}

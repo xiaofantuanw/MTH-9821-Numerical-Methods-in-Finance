@@ -1,0 +1,6 @@
+﻿  Source1.cpp
+C:\Study\Baruch\MTH9821\3\Project1\Project1\Source1.cpp(12,18): error C3861: 'trinomial_tree_pricer': identifier not found
+C:\Study\Baruch\MTH9821\3\Project1\Project1\Source1.cpp(13,18): error C3861: 'trinomial_tree_pricer': identifier not found
+C:\Study\Baruch\MTH9821\3\Project1\Project1\Source1.cpp(21,12): error C3861: 'trinomial_tree_pricer': identifier not found
+C:\Study\Baruch\MTH9821\3\Project1\Project1\Source1.cpp(32,22): error C3861: 'trinomial_tree_pricer': identifier not found
+C:\Study\Baruch\MTH9821\3\Project1\Project1\Source1.cpp(36,26): error C3861: 'trinomial_tree_pricer': identifier not found
